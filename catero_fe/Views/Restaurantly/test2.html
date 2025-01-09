@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Menu and Bill</title>
+        <!-- Add your CSS and other external resources here -->
+    </head>
+
+    <body>
+
+        <h2>Menu</h2>
+        <ul id="menu-list">
+            <!-- Sample menu items -->
+            <li data-item-name="Item 1" data-item-price="10.00">Item 1 - $10.00 <button
+                    class="btn-add-menu">Add</button></li>
+            <li data-item-name="Item 2" data-item-price="15.00">Item 2 - $15.00 <button
+                    class="btn-add-menu">Add</button></li>
+            <!-- Add more menu items here -->
+        </ul>
+
+        <h2>Bill</h2>
+        <ul id="bill-list">
+        </ul>
+
+        <h2>Rooms</h2>
+        <ul id="room-list">
+            <!-- Sample rooms -->
+            <li data-room-name="Room 1" data-room-price="100.00">Room 1 - $100.00 <button class="add-order">Add</button>
+            </li>
+            <li data-room-name="Room 2" data-room-price="150.00">Room 2 - $150.00 <button class="add-order">Add</button>
+            </li>
+            <!-- Add more rooms here -->
+        </ul>
+
+        <h2>Selected Room</h2>
+        <p id="selected-room"></p>
+
+        <h2>Total</h2>
+        <p id="total-price">Total: $0.00</p>
+
+        <!-- Add your JavaScript code here -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var selectedMenuOrder = []; // Mảng để lưu các món ăn đã chọn và số lượng của chúng
+                var selectedRoom = null; // Biến để lưu phòng đã chọn
+
+                // Function to update the total price
+                function updateTotalPrice() {
+                    var menuTotal = selectedMenuOrder.reduce(function (total, item) {
+                        return total + (item.itemPrice * item.quantity);
+                    }, 0);
+                    var roomTotal = selectedRoom ? selectedRoom.roomPrice : 0;
+                    var totalPrice = menuTotal + roomTotal;
+                    $('#total-price').text(`Total: $${totalPrice.toFixed(2)}`);
+                }
+
+                // Handle the "Add" button click for each menu item
+                $(document).on('click', '.btn-add-menu', function () {
+                    var itemName = $(this).parent().data('item-name');
+                    var itemPrice = parseFloat($(this).parent().data('item-price'));
+                    var quantity = 1; // Mặc định số lượng là 1 khi thêm mới món ăn
+
+                    // Check if the selected menu item already exists in the selectedMenuOrder array
+                    var existingItem = selectedMenuOrder.find(function (item) {
+                        return item.itemName === itemName && item.itemPrice === itemPrice;
+                    });
+
+                    if (existingItem) {
+                        existingItem.quantity += quantity;
+                    } else {
+                        selectedMenuOrder.push({ itemName, itemPrice, quantity });
+                    }
+
+                    // Display the selected menu order
+                    displaySelectedMenuOrder();
+
+                    // Update the total price
+                    updateTotalPrice();
+                });
+
+                $(document).on('click', '.btn-delete-menu', function () {
+                    var itemName = $(this).data('item-name');
+                    var itemPrice = $(this).data('item-price');
+
+                    // Remove the selected menu item from the selectedMenuOrder array
+                    selectedMenuOrder = selectedMenuOrder.filter(function (item) {
+                        return item.itemName !== itemName || item.itemPrice !== itemPrice;
+                    });
+
+                    // Display the updated selected menu order
+                    displaySelectedMenuOrder();
+
+                    // Update the total price
+                    updateTotalPrice();
+                });
+
+                $(document).on('change', '.quantity-input', function () {
+                    var itemName = $(this).closest('li').data('item-name');
+                    var itemPrice = parseFloat($(this).closest('li').data('item-price'));
+                    var newQuantity = parseInt($(this).val());
+
+                    // Find the menu item in the selectedMenuOrder array
+                    var selectedItem = selectedMenuOrder.find(function (item) {
+                        return item.itemName === itemName && item.itemPrice === itemPrice;
+                    });
+
+                    if (selectedItem) {
+                        selectedItem.quantity = newQuantity;
+                        // Display the updated selected menu order
+                        displaySelectedMenuOrder();
+
+                        // Update the total price
+                        updateTotalPrice();
+                    }
+                });
+
+                // Handle the "Add Order" button click for each room
+                $(document).on('click', '.add-order', function () {
+                    var roomName = $(this).parent().data('room-name');
+                    var roomPrice = parseFloat($(this).parent().data('room-price'));
+
+                    // Add the selected room to the selectedRoom variable
+                    selectedRoom = { roomName, roomPrice };
+
+                    // Display the selected room in the "Selected Room" section
+                    displaySelectedRoom();
+
+                    // Update the total price
+                    updateTotalPrice();
+                });
+
+                // Handle the "Delete" button click for the selected room
+                $(document).on('click', '#delete-selected-room', function () {
+                    selectedRoom = null;
+                    // Display "None" when no room is selected
+                    displaySelectedRoom();
+
+                    // Update the total price
+                    updateTotalPrice();
+                });
+
+                function displaySelectedMenuOrder() {
+                    var menuOrderList = $('#bill-list');
+                    menuOrderList.empty();
+
+                    selectedMenuOrder.forEach(function (item) {
+                        var itemPrice = parseFloat(item.itemPrice); // Ensure itemPrice is a numeric value
+                        var itemTotalPrice = itemPrice * item.quantity;
+
+                        var listItemHTML = `
+                    <li data-item-name="${item.itemName}" data-item-price="${itemPrice}">
+                        ${item.itemName} - $${itemPrice.toFixed(2)} x ${item.quantity} = $${itemTotalPrice.toFixed(2)}
+                        <input type="number" class="quantity-input" value="${item.quantity}" min="1">
+                        <button class="btn-delete-menu" data-item-name="${item.itemName}" data-item-price="${itemPrice}">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </li>`;
+                        menuOrderList.append(listItemHTML);
+                    });
+                }
+
+                function displaySelectedRoom() {
+                    var selectedRoomText = selectedRoom ? `${selectedRoom.roomName} - $${selectedRoom.roomPrice.toFixed(2)}` : '<i class="far fa-times-circle"></i> None';
+                    $('#selected-room').html(selectedRoomText);
+                }
+
+                // Display the selected menu order and total price on the form
+                displaySelectedMenuOrder();
+                updateTotalPrice();
+            });
+        </script>
+    </body>
+
+</html>

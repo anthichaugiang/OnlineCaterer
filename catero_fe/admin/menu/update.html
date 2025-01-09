@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Menu Item</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Update Menu Item</h2>
+        <form id="updateForm" enctype="multipart/form-data">
+            <input type="hidden" id="menuItemId" name="menuItemId">
+            <div class="form-group">
+                <label for="itemName">Item Name</label>
+                <input type="text" class="form-control" id="itemName" name="itemName" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="categoryId">Category</label>
+                <select class="form-control" id="categoryId" name="categoryId" required></select>
+            </div>
+            <div class="form-group">
+                <label for="supplierId">Supplier</label>
+                <select class="form-control" id="supplierId" name="supplierId" required></select>
+            </div>
+            <div class="form-group">
+                <label for="file">Image</label>
+                <input type="file" class="form-control" id="imageUrl" name="file">
+                <img id="currentImage" src="" alt="Current Image" class="mt-2" style="max-width: 100px; display: none;">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const menuItemId = urlParams.get('id');
+
+            function fetchCategories() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:7176/api/Category',
+                    success: function(categories) {
+                        categories.forEach(function(category) {
+                            $('#categoryId').append(`<option value="${category.categoryId}">${category.name}</option>`);
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to fetch categories.');
+                    }
+                });
+            }
+
+            function fetchSuppliers() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:7176/api/Supplier',
+                    success: function(suppliers) {
+                        suppliers.forEach(function(supplier) {
+                            $('#supplierId').append(`<option value="${supplier.supplierId}">${supplier.name}</option>`);
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to fetch suppliers.');
+                    }
+                });
+            }
+
+            function fetchMenuItem() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:7176/api/Menu/' + menuItemId,
+                    success: function(menuItem) {
+                        $('#menuItemId').val(menuItem.menuItemId);
+                        $('#itemName').val(menuItem.itemName);
+                        $('#price').val(menuItem.price);
+                        $('#categoryId').val(menuItem.categoryId);
+                        $('#supplierId').val(menuItem.supplierId);
+                        if (menuItem.imageUrl) {
+                            $('#currentImage').attr('src', menuItem.imageUrl).show();
+                        }
+                    },
+                    error: function() {
+                        alert('Failed to fetch menu item data.');
+                    }
+                });
+            }
+
+            fetchCategories();
+            fetchSuppliers();
+            fetchMenuItem();
+
+            $('#updateForm').submit(function(e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+                formData.append('menuItemId', menuItemId);
+
+                // If image field is not changed, do not send it
+                if (!$('#imageUrl')[0].files[0]) {
+                    formData.delete('imageUrl');
+                }
+
+                $.ajax({
+                    type: 'PUT',
+                    url: 'https://localhost:7176/api/Menu/' + menuItemId,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function() {
+                        alert('Menu item updated successfully.');
+                        window.location.href = '../index.html#/menu';
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        alert('Failed to update menu item.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,211 @@
+:root {
+    --mainPink: #ef7998;
+    --mainOrange: #cda45e;
+    --mainYellow: rgb(249, 228, 148);
+    --mainBlack: #000;
+    --mainGrey: rgb(238, 238, 238);
+    --mainWhite: #fff;
+  }
+  .store {
+    background: #0c0b09;
+  }
+  img {
+    height: 196px;
+  }
+  .store-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
+  .img-container {
+    max-height: 200px; /* Adjust as needed */
+    overflow: hidden;
+  }
+
+  .store-img {
+    width: 100%;
+  }
+
+  .store-item .card {
+    height: 100%;
+  }
+
+  .store-item .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 180px;
+  }
+  h1{
+    color: var(--mainOrange);
+  }
+  
+  .btn-black {
+    color: var(--mainOrange) !important;
+    border-color: var(--mainOrange) !important;
+  
+  }
+  
+  .btn-black:hover {
+    color: var(--mainBlack) !important;
+    background: var(--mainOrange) !important;
+  
+  }
+  
+  .search-box {
+    background: var(--mainOrange);
+    color: var(--mainOrange);
+  }
+  
+  
+  .img-container{
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .img-container:hover .store-item-icon{
+    transform: translate(0,0);
+  }
+  
+  .store-item-icon:hover{
+    color:var(--mainGrey);
+  }
+  
+  .store-img{
+    transition: all 1s ease-in-out;
+  }
+  
+  .img-container:hover .store-img {
+    transform: scale(1.2);
+  }
+  
+  
+  .store-item-icon{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 0.75rem;
+    background: var(--mainOrange);
+    border-top-left-radius: 1rem;
+    transition: all 1s ease-in-out;
+    transform: translate(100%, 100%);
+  }
+  
+  .store-item-value{
+    color: var(--mainOrange);
+  }
+  .supplier-box {
+    position: relative;
+    margin-bottom: 20px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+}
+.navbar {
+    padding: 0;
+    background: #cda45e;
+    border-radius: 50px;
+}
+
+    .navbar ul {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        list-style: none;
+        align-items: center;
+    }
+
+    .navbar li {
+        position: relative;
+    }
+
+    .navbar a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0 10px 30px;
+        color: #fff;
+        white-space: nowrap;
+        transition: 0.3s;
+        font-size: 14px;
+    }
+
+        .navbar a:hover, .navbar .active, .navbar li:hover > a {
+            color: #d9ba85;
+        }
+
+    .navbar .dropdown ul {
+        display: block;
+        position: absolute;
+        left: 14px;
+        top: calc(100% + 30px);
+        margin: 0;
+        padding: 10px 0;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        background: rgb(12, 12, 11);
+        box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+        transition: 0.3s;
+        border-radius: 4px;
+    }
+
+        .navbar .dropdown ul li {
+            min-width: 200px;
+        }
+
+        .navbar .dropdown ul a {
+            padding: 10px 20px;
+            color: #fff;
+        }
+
+            .navbar .dropdown ul a:hover, .navbar .dropdown ul .active:hover, .navbar .dropdown ul li:hover > a {
+                color: #cda45e;
+            }
+
+    .navbar .dropdown:hover > ul {
+        opacity: 1;
+        top: 100%;
+        visibility: visible;
+    }
+
+    .navbar .dropdown .dropdown ul {
+        top: 0;
+        left: calc(100% - 30px);
+        visibility: hidden;
+    }
+
+    .navbar .dropdown .dropdown:hover > ul {
+        opacity: 1;
+        top: 0;
+        left: 100%;
+        visibility: visible;
+    }
+
+@media (max-width: 1366px) {
+    .navbar .dropdown .dropdown ul {
+        left: -90%;
+    }
+
+    .navbar .dropdown .dropdown:hover > ul {
+        left: -100%;
+    }
+}
+  

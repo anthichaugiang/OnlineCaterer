@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Customer</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Update Customer</h2>
+      <form id="updateForm" enctype="multipart/form-data">
+        <input type="hidden" id="customerId" name="customerId" />
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            name="firstName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="middleName">Middle Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="middleName"
+            name="middleName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            name="lastName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select class="form-control" id="gender" name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input
+            type="date"
+            class="form-control"
+            id="dateOfBirth"
+            name="dateOfBirth"
+          />
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phoneNumber"
+            name="phoneNumber"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" />
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" class="form-control" id="address" name="address" />
+        </div>
+        <div class="form-group">
+          <label for="imageUrl">Image</label>
+          <input
+            type="file"
+            class="form-control"
+            id="imageUrl"
+            name="file"
+          />
+          <img
+            id="currentImage"
+            src=""
+            alt="Current Image"
+            class="mt-2"
+            style="max-width: 100px; display: none"
+          />
+        </div>
+        <div class="form-group">
+          <label for="customerType">Customer Type</label>
+          <input
+            type="text"
+            class="form-control"
+            id="customerType"
+            name="customerType"
+          />
+        </div>
+        <div class="form-group">
+          <label for="loginName">Login Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="loginName"
+            name="loginName"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+      <div id="errorMessages" class="mt-3"></div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get("id");
+
+        $.ajax({
+          type: "GET",
+          url: "https://localhost:7176/api/Customer/" + customerId,
+          success: function (customer) {
+            $("#customerId").val(customer.customerId);
+            $("#firstName").val(customer.firstName);
+            $("#middleName").val(customer.middleName);
+            $("#lastName").val(customer.lastName);
+            $("#gender").val(customer.gender);
+            $("#dateOfBirth").val(customer.dateOfBirth.substring(0, 10));
+            $("#phoneNumber").val(customer.phoneNumber);
+            $("#email").val(customer.email);
+            $("#address").val(customer.address);
+            $("#customerType").val(customer.customerType);
+            $("#loginName").val(customer.loginName);
+
+            if (customer.imageUrl) {
+              $("#currentImage").attr("src", customer.imageUrl).show();
+            }
+          },
+          error: function () {
+            alert("Failed to fetch customer data.");
+          },
+        });
+        $("#updateForm").submit(function (e) {
+          e.preventDefault();
+
+          var formData = new FormData(this);
+          formData.append("customerId", customerId);
+
+          // Check if image field is not changed, do not send it
+          if ($("#imageUrl")[0].files.length === 0) {
+            formData.delete("imageUrl");
+          }
+
+          // Log FormData to console for debugging
+          console.log(formData);
+          for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+           }
+
+          $.ajax({
+            type: "PUT",
+            url: "https://localhost:7176/api/Customer/" + customerId,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+              alert("Customer updated successfully.");
+              window.location.href = "../index.html#/customer";
+            },
+            error: function (xhr) {
+              $("#errorMessages").empty(); // Clear previous error messages
+              const response = JSON.parse(xhr.responseText);
+              if (response.errors) {
+                $.each(response.errors, function (key, messages) {
+                  $.each(messages, function (index, message) {
+                    $("#errorMessages").append(
+                      '<div class="alert alert-danger">' + message + "</div>"
+                    );
+                  });
+                });
+              } else {
+                $("#errorMessages").append(
+                  '<div class="alert alert-danger">' + response.title + "</div>"
+                );
+              }
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <title>Supplier Registration</title>
+        <style>
+            body {
+                background-color: #f2f2f2;
+            }
+
+            .container {
+                margin-top: 50px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-title {
+                text-align: center;
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                font-weight: bold;
+            }
+
+            .form-control {
+                border-radius: 3px;
+            }
+
+            .btn-primary {
+                background-color: #2cccc4;
+                border-color: #2cccc4;
+                width: 100%;
+            }
+
+            .btn-primary:hover {
+                background-color: #00b3b3;
+                border-color: #00b3b3;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <h2 class="card-title">Supplier Registration</h2>
+                        <form id="supplierRegistrationForm">
+                            <div class="form-group">
+                                <label for="supplierName">Name</label>
+                                <input type="text" class="form-control" id="supplierName" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierPhoneNumber">Phone Number</label>
+                                <input type="text" class="form-control" id="supplierPhoneNumber"
+                                    placeholder="Enter your phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierAddress">Address</label>
+                                <input type="text" class="form-control" id="supplierAddress"
+                                    placeholder="Enter your address">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierEmail">Email</label>
+                                <input type="email" class="form-control" id="supplierEmail"
+                                    placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierLevel">Level</label>
+                                <select class="form-control" id="supplierLevel">
+                                    <option value="">Select level</option>
+                                    <option value="Level 1">Level 1</option>
+                                    <option value="Level 2">Level 2</option>
+                                    <option value="Level 3">Level 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierACity">City</label>
+                                <select class="form-control" id="supplierACity">
+                                    <option value="">Select city</option>
+                                    <option value="Hà Nội">Hà Nội</option>
+                                    <option value="tp Hồ Chí Minh">tp HCM</option>
+                                    <option value="Hải Phòng">Hải Phòng</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierLoginName">Login Name</label>
+                                <input type="text" class="form-control" id="supplierLoginName"
+                                    placeholder="Enter your login name">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplierPassword">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="supplierPassword"
+                                        placeholder="Enter your password">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary" id="showPasswordToggle"
+                                            onclick="togglePasswordVisibility()">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register as Supplier</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function togglePasswordVisibility() {
+                var passwordInput = document.getElementById("supplierPassword");
+                var showPasswordToggle = document.getElementById("showPasswordToggle");
+
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    showPasswordToggle.innerHTML = '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
+                } else {
+                    passwordInput.type = "password";
+                    showPasswordToggle.innerHTML = '<i class="fa fa-eye" aria-hidden="true"></i>';
+                }
+            }
+
+            document.getElementById("supplierRegistrationForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                const formData = {
+                    SName: document.getElementById("supplierName").value,
+                    PhoneNumber: document.getElementById("supplierPhoneNumber").value,
+                    Address: document.getElementById("supplierAddress").value,
+                    Email: document.getElementById("supplierEmail").value,
+                    SLevel: document.getElementById("supplierLevel").value,
+                    ACityId: document.getElementById("supplierACity").value,
+                    SLoginName: document.getElementById("supplierLoginName").value,
+                    Password: document.getElementById("supplierPassword").value,
+                };
+
+                fetch("https://localhost:7252/api/Supplier/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Supplier registered successfully:", data);
+                        alert("Supplier registered successfully!");
+                        document.getElementById("supplierRegistrationForm").reset();
+                    })
+                    .catch(error => {
+                        console.error("Error registering supplier:", error);
+                        alert("An error occurred while registering the supplier.");
+                    });
+            });
+        </script>
+    </body>
+
+</html>

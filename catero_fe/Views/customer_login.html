@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <!-- Add Bootstrap CSS link here -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <section class="vh-100">
+            <div class="container py-5 h-100">
+                <div class="row d-flex align-items-center justify-content-center h-100">
+                    <div class="col-md-8 col-lg-7 col-xl-6">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+                            class="img-fluid" alt="Phone image">
+                    </div>
+                    <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                        <h2>Customer Login</h2>
+                        <form id="loginForm">
+                            <!-- LoginName input -->
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <input type="text" id="loginNameInput" class="form-control form-control-lg"
+                                        autocomplete="off">
+                                    <label for="loginNameInput">Login Name</label>
+                                </div>
+                            </div>
+
+                            <!-- Password input -->
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <input type="password" id="passwordInput" class="form-control form-control-lg"
+                                        autocomplete="off">
+                                    <label for="passwordInput">Password</label>
+                                </div>
+                            </div>
+
+                            <!-- Checkbox -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="rememberCheck" checked>
+                                    <label class="form-check-label" for="rememberCheck">Remember me</label>
+                                </div>
+                            </div>
+
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+
+                            <!-- Register link -->
+                            <p class="text-center mt-3">Don't have an account? <a
+                                    href="cutstomer_register.html">Register</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+        <!-- ... Trong phần script -->
+        <script>
+            $(document).ready(function () {
+                $("#loginForm").on("submit", function (e) {
+                    e.preventDefault();
+                    var loginName = $("#loginNameInput").val();
+                    var password = $("#passwordInput").val();
+                    $.ajax({
+                        url: "https://localhost:7252/api/Customer/login",
+                        type: "POST",
+                        data: {
+                            CLoginName: loginName,
+                            Password: password
+                        },
+                        success: function (data) {
+                            // Lưu trữ token vào Local Storage
+                            localStorage.setItem("jwtToken", data.token);
+
+                            var token = data.token;
+
+                            function decodeToken(token) {
+                                const base64Url = token.split('.')[1];
+                                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                                const decodedToken = JSON.parse(atob(base64));
+
+                                return decodedToken;
+                            }
+                            const decodedToken = decodeToken(token);
+                            var customerId = decodedToken.CustomerId;
+                            console.log(decodedToken);
+                            // Lưu customerId vào Local Storage
+                            localStorage.setItem("customerId", customerId);
+
+                            // Chuyển hướng đến trang sau khi đăng nhập thành công
+                            window.location.href = "../Restaurantly/index.html";
+                        },
+                        error: function () {
+                            alert("Login failed. Please check your login credentials.");
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+    </body>
+
+</html>

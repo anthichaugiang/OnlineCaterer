@@ -1,0 +1,129 @@
+/* Định dạng phần header */
+.jumbotron {
+	background-color: #f8f9fa;
+	color: #212529;
+  }
+  header {
+
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    
+  }
+
+  .navbar-nav ul li  {
+    border-right: white solid 2px;
+  }
+  .navbar-nav li a {
+	color: white;
+  }
+  
+  /* Định dạng phần giới thiệu */
+  #gioi-thieu {
+	background-color: #fff;
+	color: #212529;
+	padding: 30px 0;
+  }
+  
+  /* Định dạng phần liên hệ */
+  #lien-he {
+	background-color: #f8f9fa;
+	color: #212529;
+	padding: 50px 0;
+  }
+  
+  /* Định dạng phần phòng VIP */
+  #phong-vip {
+	background-color: #fff;
+	color: #212529;
+	padding: 50px 0;
+  }
+  
+  .card {
+	margin-bottom: 20px;
+  }
+  
+  .card-title {
+	font-weight: bold;
+  }
+  
+  .card-text {
+	font-size: 1.1em;
+  }
+  
+  /* Định dạng phần phòng thường */
+  #phong-thuong {
+	background-color: #f8f9fa;
+	color: #212529;
+	padding: 50px 0;
+  }
+  
+  .card-img-top {
+	height: 300px;
+  }
+  
+  /* Thiết lập phần menu */
+#menu {
+	background-color: #f5f5f5;
+	padding: 40px 0;
+  }
+  
+  /* Thiết lập tiêu đề */
+  .section-title {
+	text-align: center;
+	font-size: 36px;
+	margin-bottom: 40px;
+  }
+  
+  /* Thiết lập danh mục */
+  
+ 
+  .menu-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+  }
+  /* Thiết lập món ăn */
+  
+  /* Định dạng cho phần tử section */
+#menu {
+	padding: 80px 0;
+  }
+  
+  
+  /* Định dạng cho phần tử tiêu đề */
+  .menu-category h2 {
+	font-size: 36px;
+	font-weight: 700;
+	margin-bottom: 20px;
+  }
+  
+  /* Định dạng cho các phần tử liệt kê */
+  .menu-items {
+	font-size: 18px;
+	line-height: 1.5;
+	margin-bottom: 10px;
+  }
+  .menu-container {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr); /* Xếp 3 cột có chiều rộng bằng nhau */
+	gap: 20px; /* Khoảng cách giữa các phần tử */
+  }
+  
+  .menu-category {
+    background-color: white;
+   border: 1px black; 
+   border-radius: 10px;
+	grid-column: span 1; /* Mỗi phần tử chiếm 1 cột */
+  }
+  /* Định dạng phần footer */
+  footer {
+	background-color: #212529;
+	color: #fff;
+	padding: 20px 0;
+  }
+  .loading {
+	text-align: center;
+	font-size: 20px;
+	margin: 20px 0;
+  }

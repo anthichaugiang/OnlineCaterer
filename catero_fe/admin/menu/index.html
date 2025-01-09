@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Menu Management</h2>
+        <a href="menu/insert.html" class="btn btn-primary mb-3">Add Menu Item</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Supplier</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="menuTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'https://localhost:7176/api/Menu',
+                success: function(menuItems) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://localhost:7176/api/Category',
+                        success: function(categories) {
+                            const categoryMap = {};
+                            categories.forEach(category => {
+                                categoryMap[category.categoryId] = category.name;
+                            });
+
+                            $.ajax({
+                                type: 'GET',
+                                url: 'https://localhost:7176/api/Supplier',
+                                success: function(suppliers) {
+                                    const supplierMap = {};
+                                    suppliers.forEach(supplier => {
+                                        supplierMap[supplier.supplierId] = supplier.name;
+                                    });
+
+                                    menuItems.forEach(menuItem => {
+                                        const categoryName = categoryMap[menuItem.categoryId] || 'Unknown';
+                                        const supplierName = supplierMap[menuItem.supplierId] || 'Unknown';
+                                        const imageUrl = menuItem.imageUrl ? `<img src="${menuItem.imageUrl}" alt="Menu Item Image" style="max-width: 100px;">` : '';
+                                        $('#menuTableBody').append(`
+                                            <tr>
+                                                <td>${menuItem.itemName}</td>
+                                                <td>${menuItem.price}</td>
+                                                <td>${categoryName}</td>
+                                                <td>${supplierName}</td>
+                                                <td>${imageUrl}</td>
+                                                <td>
+                                                    <a href="menu/update.html?id=${menuItem.menuItemId}" class="btn btn-primary btn-sm">Update</a>
+                                                    <button class="btn btn-danger btn-sm delete-btn" data-id="${menuItem.menuItemId}">Delete</button>
+                                                </td>
+                                            </tr>
+                                        `);
+                                    });
+
+                                    $('.delete-btn').click(function() {
+                                        const menuItemId = $(this).data('id');
+                                        $.ajax({
+                                            type: 'DELETE',
+                                            url: 'https://localhost:7176/api/Menu/' + menuItemId,
+                                            success: function() {
+                                                alert('Menu item deleted successfully.');
+                                                location.reload();
+                                            },
+                                            error: function() {
+                                                alert('Failed to delete menu item.');
+                                            }
+                                        });
+                                    });
+                                },
+                                error: function() {
+                                    alert('Failed to fetch suppliers.');
+                                }
+                            });
+                        },
+                        error: function() {
+                            alert('Failed to fetch categories.');
+                        }
+                    });
+                },
+                error: function() {
+                    alert('Failed to fetch menu items.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

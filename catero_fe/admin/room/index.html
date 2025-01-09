@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Room Management</h2>
+        <a href="room/insert.html" class="btn btn-primary mb-3">Add Room</a>
+        <table id="roomTable" class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Room Name</th>
+                    <th scope="col">Capacity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">ServiceId</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data sẽ được nạp động từ API -->
+            </tbody>
+        </table>
+    </div>
+
+  
+    <script>
+        $(document).ready(function () {
+            // Function to fetch and display rooms
+            function getRooms() {
+                $.ajax({
+                    url: 'https://localhost:7176/api/Room',
+                    type: 'GET',
+                    success: function (rooms) {
+                        var roomTableBody = $('#roomTable tbody');
+                        roomTableBody.empty();
+                        rooms.forEach(function (room) {
+                            var row = `<tr>
+                                <td>${room.roomName}</td>
+                                <td>${room.capacity}</td>
+                                <td>${room.price}</td>
+                                <td>${room.serviceId}</td>
+                                <td>${room.description}</td>
+                                <td>
+                                    <a href="room/update.html?id=${room.roomId}" class="btn btn-warning btn-sm">Edit</a>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteRoom(${room.roomId})">Delete</button>
+                                </td>
+                            </tr>`;
+                            roomTableBody.append(row);
+                        });
+                    },
+                    error: function () {
+                        alert('Failed to fetch rooms.');
+                    }
+                });
+            }
+
+            // Call the function to load the room list when the page is loaded
+            getRooms();
+
+            // Function to delete a room
+            window.deleteRoom = function (roomId) {
+                if (confirm('Are you sure you want to delete this room?')) {
+                    $.ajax({
+                        url: 'https://localhost:7176/api/Room/' + roomId,
+                        type: 'DELETE',
+                        success: function () {
+                            alert('Room deleted successfully.');
+                            getRooms();
+                        },
+                        error: function () {
+                            alert('Failed to delete room.');
+                        }
+                    });
+                }
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      
+    </style>
+    <title>Online Catering</title>
+  </head>
+
+  <body>
+    <section id="store" class="store py-5">
+      <div class="container">
+        <div id="navbar" class="navbar order-last order-lg-0 col-xl-1">
+          <ul>
+            <li class="dropdown">
+              <a href="#"><span>Login</span></a>
+              <ul>
+                <li><a href="login.html">Customer</a></li>
+                <li><a href="#">Supplier</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="row">
+          <div class="col-10 mx-auto col-sm-6 text-center">
+            <h1 class="text-capitalize">
+              <i class="bi bi-shop">
+                Welcome to<strong class="banner-title">
+                  Online Catering
+                </strong>
+              </i>
+            </h1>
+          </div>
+        </div>
+
+        <div class="row">
+          <div
+            class="col-lg-8 mx-auto d-flex justify-content-around my-2 sortBtn flex-wrap"
+          >
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-black text-uppercase filter-btn m-2"
+              data-filter="all"
+            >
+              ALL</a
+            >
+
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-black text-uppercase filter-btn m-2"
+              data-filter=".fillter-Birthday"
+            >
+              Birthday</a
+            >
+
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-black text-uppercase filter-btn m-2"
+              data-filter=".fillter-BusinessEvents"
+            >
+              Business Events</a
+            >
+
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-black text-uppercase filter-btn m-2"
+              data-filter=".fillter-Weddings"
+            >
+              Weddings</a
+            >
+
+            <a
+              href="#"
+              class="btn btn-outline-secondary btn-black text-uppercase filter-btn m-2"
+              data-filter=".fillter-Private"
+            >
+              Private</a
+            >
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-10 mx-auto col-md-6">
+            <form>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <select class="custom-select" id="city-select">
+                    <option selected>Location</option>
+                    <option value="1">Hà Nội</option>
+                    <option value="2">Đà Nẵng</option>
+                    <option value="3">Tp HCM</option>
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="What are you looking for..."
+                  id="search-item"
+                />
+                <div class="input-group-append">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="searchFunction()"
+                  >
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row" id="store-items">
+          <div
+            class="col-10 col-sm-6 col-lg-4 mx-auto my-3 store-item"
+            data-item="123"
+          >
+            <div class="card">
+              <div class="img-container">
+                <img src="res1.jpg" class="card-img-top store-img" />
+                <span class="store-item-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                </span>
+              </div>
+              <div class="card-body">
+                <div
+                  class="card-text d-flex justify-content-between text-capitalize"
+                >
+                  <h5 id="store-item-name">cupcake item</h5>
+                  <h5 class="store-item-value">
+                    $
+                    <strong id="store-item-price" class="font-weight-bold"
+                      >5</strong
+                    >
+                  </h5>
+                </div>
+                <p>
+                  <i class="fas fa-map-marker-alt icon-field"></i> Location 1
+                </p>
+                <p><i class="fas fa-level-up-alt icon-field"></i> Level 1</p>
+                <p><i class="fas fa-glass-cheers"></i> Service Type 1</p>
+              </div>
+            </div>
+            <!-----End Of Card-->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- script js -->
+    <script type="text/javascript" src="assets/js/index.js"></script>
+  </body>
+</html>

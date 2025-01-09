@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/navigo/8.11.1/navigo.min.js"></script>
+    <style>
+      .sidebar {
+        background-color: #343a40;
+        color: #ffffff;
+        height: 100vh;
+        position: fixed;
+        overflow-y: auto;
+        top: 70px;
+        left: 0;
+        width: 250px;
+        padding: 1rem;
+      }
+
+      .sidebar .nav-link {
+        color: #ffffff;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+
+      .sidebar .nav-link:hover {
+        color: #bfbfbf;
+      }
+
+      .navbar {
+        background-color: #f8f9fa;
+        color: #343a40;
+        padding: 1rem;
+      }
+
+      .navbar-brand {
+        color: #343a40;
+        font-weight: bold;
+        font-size: 2rem;
+        margin-right: 2rem;
+      }
+
+      .navbar-nav .nav-link {
+        color: #343a40;
+        font-size: 1.2rem;
+        margin-left: 1.5rem;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: #bfbfbf;
+      }
+
+      .navbar-nav .nav-link.active {
+        font-weight: bold;
+      }
+
+      .navbar-nav .ml-auto .nav-link {
+        color: #343a40;
+        font-size: 1.2rem;
+        margin-left: 1.5rem;
+      }
+
+      .navbar-nav .ml-auto .nav-link:hover {
+        color: #bfbfbf;
+      }
+
+      .content {
+        margin-left: 250px;
+        padding: 1rem;
+      }
+    </style>
+    <title>Admin Dashboard</title>
+  </head>
+
+  <body>
+    <div>
+      <div class="sidebar d-flex flex-column align-items-center">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="#/acity">Acity</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/customer">Customer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/supplier">Supplier</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/service">Service</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/room">Room</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/service">Service</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/menu">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/supplier-invoice">Supplier Invoice</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#/supplier-menu">Supplier Menu</a>
+          </li>
+        </ul>
+      </div>
+      <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="content" id="content">
+      <!-- Nội dung sẽ được load vào đây -->
+    </div>
+
+    <script>
+      const router = new Navigo("/", { hash: true });
+
+      router.on("/acity", function () {
+        $("#content").load("city/index.html");
+      });
+
+      router.on("/customer", function () {
+        $("#content").load("customer/index.html");
+      });
+
+      router.on("/supplier", function () {
+        $("#content").load("supplier/index.html");
+      });
+
+      router.on("/service", function () {
+        $("#content").load("service/index.html");
+      });
+
+      router.on("/room", function () {
+        $("#content").load("room/index.html");
+      });
+
+      router.on("/menu", function () {
+        $("#content").load("menu/index.html");
+      });
+
+      router.on("/message", function () {
+        $("#content").load("message.html");
+      });
+
+      router.on("/room", function () {
+        $("#content").load("room.html");
+      });
+
+      router.on("/service", function () {
+        $("#content").load("service.html");
+      });
+
+      router.on("/supplier-detail", function () {
+        $("#content").load("supplier-detail.html");
+      });
+
+      router.on("/supplier-invoice", function () {
+        $("#content").load("supplier-invoice.html");
+      });
+
+      router.on("/supplier-menu", function () {
+        $("#content").load("supplier-menu.html");
+      });
+
+      // Default route
+      router.notFound(function () {
+        $("#content").html("<h1>Welcome To Admin DashBoard</h1>");
+      });
+
+      // Khởi tạo router
+      router.resolve();
+    </script>
+  </body>
+</html>

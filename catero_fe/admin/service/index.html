@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Service Management</h2>
+        <a href="service/insert.html" class="btn btn-primary mb-3">Add Service</a>
+        <table id="serviceTable" class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Service Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Supplier ID</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Function to fetch and display services
+            function getServices() {
+                $.ajax({
+                    url: 'https://localhost:7176/api/Service',
+                    type: 'GET',
+                    success: function(services) {
+                        var tableBody = $('#serviceTable tbody');
+                        tableBody.empty();
+                        services.forEach(function(service) {
+                            var row = '<tr>' +
+                                '<td>' + service.serviceName + '</td>' +
+                                '<td>' + service.description + '</td>' +
+                                '<td>' + service.supplierId + '</td>' +
+                                '<td><img src="' + service.imageUrl + '" alt="Service Image" style="max-width: 100px;"></td>' +
+                                '<td>' +
+                                    '<button class="btn btn-primary mr-2 update-btn" data-id="' + service.serviceId + '">Update</button>' +
+                                    '<button class="btn btn-danger delete-btn" data-id="' + service.serviceId + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                            tableBody.append(row);
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to fetch services.');
+                    }
+                });
+            }
+
+            // Initial load of services
+            getServices();
+
+            // Handle delete button click
+            $('#serviceTable').on('click', '.delete-btn', function() {
+                var serviceId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this service?')) {
+                    $.ajax({
+                        url: 'https://localhost:7176/api/Service/' + serviceId,
+                        type: 'DELETE',
+                        success: function() {
+                            getServices(); // Refresh service list after deletion
+                            alert('Service deleted successfully.');
+                        },
+                        error: function() {
+                            alert('Failed to delete service.');
+                        }
+                    });
+                }
+            });
+
+            // Handle update button click
+            $('#serviceTable').on('click', '.update-btn', function() {
+                var serviceId = $(this).data('id');
+                // Redirect to update page or modal implementation
+                window.location.href = 'service/update.html?id=' + serviceId;
+            });
+        });
+    </script>
+</body>
+</html>

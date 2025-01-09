@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Supplier Management</h2>
+        <a href="supplier/insert.html" class="btn btn-primary mb-3">Add Supplier</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Level</th>
+                    <th>City</th>
+                    <th>Image</th>
+                    <th>Login Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="supplierTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'https://localhost:7176/api/Supplier',
+                success: function(suppliers) {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://localhost:7176/api/City',
+                        success: function(cities) {
+                            const cityMap = {};
+                            cities.forEach(city => {
+                                cityMap[city.cityId] = city.cityName;
+                            });
+
+                            suppliers.forEach(supplier => {
+                                const cityName = cityMap[supplier.cityId] || 'Unknown';
+                                const imageUrl = supplier.imageUrl ? `<img src="${supplier.imageUrl}" alt="Supplier Image" style="max-width: 100px;">` : '';
+                                $('#supplierTableBody').append(`
+                                    <tr>
+                                        <td>${supplier.name}</td>
+                                        <td>${supplier.phoneNumber}</td>
+                                        <td>${supplier.address}</td>
+                                        <td>${supplier.email}</td>
+                                        <td>${supplier.level}</td>
+                                        <td>${cityName}</td>
+                                        <td>${imageUrl}</td>
+                                        <td>${supplier.loginName}</td>
+                                        <td>
+                                            <a href="supplier/update.html?id=${supplier.supplierId}" class="btn btn-primary btn-sm">Update</a>
+                                            <button class="btn btn-danger btn-sm delete-btn" data-id="${supplier.supplierId}">Delete</button>
+                                        </td>
+                                    </tr>
+                                `);
+                            });
+
+                            $('.delete-btn').click(function() {
+                                const supplierId = $(this).data('id');
+                                $.ajax({
+                                    type: 'DELETE',
+                                    url: 'https://localhost:7176/api/Supplier/' + supplierId,
+                                    success: function() {
+                                        alert('Supplier deleted successfully.');
+                                        location.reload();
+                                    },
+                                    error: function() {
+                                        alert('Failed to delete supplier.');
+                                    }
+                                });
+                            });
+                        },
+                        error: function() {
+                            alert('Failed to fetch cities.');
+                        }
+                    });
+                },
+                error: function() {
+                    alert('Failed to fetch suppliers.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

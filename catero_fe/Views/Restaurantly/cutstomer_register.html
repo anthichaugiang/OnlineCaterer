@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <title>Customer Registration</title>
+  <style>
+    body {
+      background-image: url("http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 100%;
+      font-family: "Numans", sans-serif;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .form-control {
+      border-radius: 3px;
+    }
+
+    .btn-primary {
+      background-color: #2cccc4;
+      border-color: #2cccc4;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background-color: #00b3b3;
+      border-color: #00b3b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <h2 class="card-title">Customer Registration</h2>
+
+          <form id="customerRegistrationForm" enctype="multipart/form-data" onsubmit="registerCustomer(event)">
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required />
+              </div>
+              <div class="form-group col-md-4">
+                <label for="middleName">Middle Name</label>
+                <input type="text" class="form-control" id="middleName" name="middleName" />
+              </div>
+              <div class="form-group col-md-4">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="gender">Gender</label>
+                <select class="form-control" id="gender" name="gender" required>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" class="form-control" id="address" name="address" required />
+            </div>
+            <div class="form-group">
+              <label for="customerType">Type</label>
+              <select class="form-control" id="customerType" name="customerType" required>
+                <option value="">Select type</option>
+                <option value="Individual">Individual</option>
+                <option value="Corporate">Corporate</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="loginName">Login Name</label>
+              <input type="text" class="form-control" id="loginName" name="loginName" required />
+            </div>
+            <div class="form-group">
+              <label for="passwordHash">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="passwordHash" name="passwordHash" required />
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-outline-secondary" id="showPasswordToggle" onclick="togglePasswordVisibility()">
+                    <i class="fa fa-eye" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="file">Profile Image</label>
+              <input type="file" class="form-control" id="file" name="file" />
+            </div>
+            <div id="successMessage" style="display: none;">
+              Customer registration successful! You can now proceed to login.
+            </div>
+            <button type="submit" class="btn btn-primary">Register as Customer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("passwordHash");
+      var showPasswordToggle = document.getElementById("showPasswordToggle");
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        showPasswordToggle.innerHTML = '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
+      } else {
+        passwordInput.type = "password";
+        showPasswordToggle.innerHTML = '<i class="fa fa-eye" aria-hidden="true"></i>';
+      }
+    }
+
+    function registerCustomer(event) {
+      event.preventDefault();
+      var form = document.getElementById("customerRegistrationForm");
+      var formData = new FormData(form);
+
+      $.ajax({
+        type: "POST",
+        url: "https://localhost:7176/api/Customer",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function () {
+          alert("Customer added successfully.");
+          window.location.href = "login.html";
+        },
+        error: function (xhr) {
+          console.log("Error: " + xhr.status);
+          console.log("Response: " + xhr.responseText);
+          alert("Failed to add customer." + xhr.responseText);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

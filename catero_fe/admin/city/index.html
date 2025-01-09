@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Acity</title>
+</head>
+<body>
+  <h1>City </h1>
+    <div class="container mt-5">
+        <a href="city/insert.html" class="btn btn-primary mb-3">Insert Acity</a>
+        <table id="AcityTable" class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Acity Id</th>
+                    <th scope="col">Acity Name</th>
+                    <th scope="col">Parent City</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        async function getAcities() {
+            try {
+                const response = await fetch("https://localhost:7176/api/City");
+                if (response.ok) {
+                    const acities = await response.json();
+                    const tableBody = document.getElementById("AcityTable").getElementsByTagName("tbody")[0];
+                    tableBody.innerHTML = "";
+
+                    // Function to get parent city name by parentId
+                    async function getParentCityName(parentId) {
+                        try {
+                            const response = await fetch(`https://localhost:7176/api/City/${parentId}`);
+                            if (response.ok) {
+                                const parentCity = await response.json();
+                                return parentCity.cityName;
+                            } else {
+                                throw new Error(`Failed to fetch parent city with ID: ${parentId}`);
+                            }
+                        } catch (error) {
+                            console.error("Error fetching parent city:", error);
+                            return ""; 
+                        }
+                    }
+
+                    acities.forEach(async (acity) => {
+                        const row = tableBody.insertRow();
+                        row.insertCell(0).textContent = acity.cityId;
+                        row.insertCell(1).textContent = acity.cityName;
+
+                        // Get parent city name and display it
+                        const parentCityName = await getParentCityName(acity.parentId);
+                        row.insertCell(2).textContent = parentCityName;
+
+                        const updateButton = document.createElement("button");
+                        updateButton.textContent = "Update";
+                        updateButton.classList.add("btn", "btn-primary", "mr-2");
+                        updateButton.addEventListener("click", () => {
+                            localStorage.setItem("selectedAcity", JSON.stringify(acity));
+                            window.location.href = "city/update.html";
+                        });
+
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.classList.add("btn", "btn-danger");
+                        deleteButton.addEventListener("click", async () => {
+                            if (confirm(`Are you sure you want to delete ${acity.cityName}?`)) {
+                                try {
+                                    const deleteResponse = await fetch(`https://localhost:7176/api/City/${acity.cityId}`, {
+                                        method: "DELETE",
+                                    });
+                                    if (deleteResponse.ok) {
+                                        alert(`${acity.cityName} deleted successfully.`);
+                                        tableBody.removeChild(row);
+                                    } else {
+                                        alert(`Failed to delete ${acity.cityName}.`);
+                                    }
+                                } catch (error) {
+                                    console.error("Error deleting Acity:", error);
+                                    alert("An error occurred while deleting Acity.");
+                                }
+                            }
+                        });
+
+                        const actionCell = row.insertCell(3);
+                        actionCell.appendChild(updateButton);
+                        actionCell.appendChild(deleteButton);
+                    });
+                } else {
+                    console.error("Failed to fetch Acity data.");
+                    alert("Failed to fetch Acity data.");
+                }
+            } catch (error) {
+                console.error("Error fetching Acity data:", error);
+                alert("An error occurred while fetching Acity data.");
+            }
+        }
+
+        getAcities();
+    </script>
+</body>
+</html>

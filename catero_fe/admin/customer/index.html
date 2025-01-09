@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Customer Management</h2>
+        <a href="customer/insert.html" class="btn btn-primary mb-3">Add Customer</a>
+        <table id="customerTable" class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Middle Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Date of Birth</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Customer Type</th>
+                    <th scope="col">Login Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+          
+            // Function to fetch and display customers
+            function getCustomers() {
+                $.ajax({
+                    url: 'https://localhost:7176/api/Customer',
+                    type: 'GET',
+                    success: function(customers) {
+                        var tableBody = $('#customerTable tbody');
+                        tableBody.empty();
+                        customers.sort((a, b) => b.customerId - a.customerId);
+                        customers.forEach(function(customer) {
+                            var row = '<tr>' +
+                                '<td>' + customer.customerId + '</td>' +
+                                '<td>' + customer.firstName + '</td>' +
+                                '<td>' + customer.middleName + '</td>' +
+                                '<td>' + customer.lastName + '</td>' +
+                                '<td>' + customer.gender + '</td>' +
+                                '<td>' + formatDate(customer.dateOfBirth) + '</td>' +
+                                '<td>' + customer.phoneNumber + '</td>' +
+                                '<td>' + customer.email + '</td>' +
+                                '<td>' + customer.address + '</td>' +
+                                '<td><img src="' + customer.imageUrl + '" alt="Customer Image" style="max-width: 100px;"></td>' +
+                                '<td>' + customer.customerType + '</td>' +
+                                '<td>' + customer.loginName + '</td>' +
+                                '<td>' +
+                                    '<button class="btn btn-primary mr-2 update-btn" data-id="' + customer.customerId + '">Update</button>' +
+                                    '<button class="btn btn-danger delete-btn" data-id="' + customer.customerId + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                            tableBody.append(row);
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to fetch customers.');
+                    }
+                });
+            }
+
+            // Initial load of customers
+            getCustomers();
+
+            // Handle delete button click
+            $('#customerTable').on('click', '.delete-btn', function() {
+                var customerId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this customer?')) {
+                    $.ajax({
+                        url: 'https://localhost:7176/api/Customer/' + customerId,
+                        type: 'DELETE',
+                        success: function() {
+                            getCustomers(); // Refresh customer list after deletion
+                            alert('Customer deleted successfully.');
+                        },
+                        error: function() {
+                            alert('Failed to delete customer.');
+                        }
+                    });
+                }
+            });
+
+            // Handle update button click
+            $('#customerTable').on('click', '.update-btn', function() {
+                var customerId = $(this).data('id');
+                //Redirect to update page or modal implementation
+                window.location.href = 'customer/update.html?id=' + customerId;
+               
+            });
+
+            // Function to format date as "YYYY-MM-DD"
+            function formatDate(dateString) {
+                var date = new Date(dateString);
+                var year = date.getFullYear();
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+        });
+    </script>
+</body>
+</html>

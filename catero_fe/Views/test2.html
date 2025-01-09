@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Chat Interface</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+
+            .chat-container {
+                width: 400px;
+                margin: 0 auto;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+                height: 400px;
+                overflow-y: scroll;
+            }
+
+            .message {
+                margin-bottom: 10px;
+            }
+
+            .user-message {
+                background-color: #e6f7ff;
+            }
+
+            .bot-message {
+                background-color: #f0f0f0;
+            }
+
+            .input-container {
+                margin-top: 10px;
+            }
+
+            .input-container input {
+                width: 300px;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot-message">Hello! How can I assist you today?</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message here..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <script>
+            function appendMessage(message, sender) {
+                const chatContainer = document.getElementById("chatContainer");
+                const messageDiv = document.createElement("div");
+                messageDiv.classList.add("message");
+                messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+                messageDiv.innerText = message;
+                chatContainer.appendChild(messageDiv);
+
+                // Scroll to the bottom of the chat container
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function sendMessage() {
+                const userInput = document.getElementById("userInput");
+                const userMessage = userInput.value.trim();
+
+                if (userMessage !== "") {
+                    appendMessage(userMessage, "user");
+
+                    // Here, you can process the user's message, send it to your backend, and handle the response.
+
+                    // For demonstration purposes, we'll simulate a bot response after a short delay.
+                    setTimeout(function () {
+                        const botResponse = "This is a sample bot response.";
+                        appendMessage(botResponse, "bot");
+                    }, 500);
+
+                    userInput.value = "";
+                }
+            }
+
+            // Listen for Enter key press to send message
+            document.getElementById("userInput").addEventListener("keyup", function (event) {
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+            });
+        </script>
+    </body>
+
+</html>

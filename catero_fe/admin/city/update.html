@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Update Acity</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Update Acity</h2>
+      <form id="updateForm">
+        <div class="form-group">
+          <label for="acityName">City Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="acityName"
+            name="acityName"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="parentId">Parent Id</label>
+          <select class="form-control" id="parentId" name="parentId">
+            <option value="">-- Select Parent City --</option>
+         
+        </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+
+    <script>
+        // JavaScript để điền dữ liệu vào dropdown list và xử lý sự kiện khi form được load
+    document.addEventListener('DOMContentLoaded', async function() {
+    const parentIdSelect = document.getElementById('parentId');
+
+    // Fetch danh sách thành phố từ API hoặc server
+    try {
+        const response = await fetch('https://localhost:7176/api/City'); 
+        if (response.ok) {
+            const cities = await response.json();
+
+            // Đổ dữ liệu vào dropdown list
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.cityId;
+                option.textContent = city.cityName;
+                parentIdSelect.appendChild(option);
+            });
+
+            // Mặc định là null
+            parentIdSelect.value = ''; // Nếu bạn muốn mặc định là null khi load form
+        } else {
+            throw new Error('Failed to fetch city data.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+      const selectedAcity = JSON.parse(localStorage.getItem("selectedAcity"));
+      document.getElementById("acityName").value = selectedAcity.cityName;
+      document.getElementById("parentId").value = selectedAcity.parentId;
+
+      const updateForm = document.getElementById("updateForm");
+      updateForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(updateForm);
+        const updatedAcity = {
+          cityId: selectedAcity.cityId,
+          cityName: formData.get("acityName"),
+          parentId: formData.get("parentId")|| null,
+        };
+        
+        try {
+            
+          const response = await fetch(
+            `https://localhost:7176/api/City/${updatedAcity.cityId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedAcity),
+            }
+          );
+
+          if (response.ok) {
+            alert("Acity updated successfully.");
+            window.location.href = "../index.html#/acity";
+          } else {
+            alert("Failed to update Acity.");
+          }
+        } catch (error) {
+          console.error("Error updating Acity:", error);
+          alert("An error occurred while updating Acity.");
+        }
+      });
+    </script>
+  </body>
+</html>

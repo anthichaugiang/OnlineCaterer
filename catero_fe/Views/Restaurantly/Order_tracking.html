@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Trang theo dõi đơn hàng</title>
+        <!-- Thêm các thẻ link CSS và script -->
+        <link rel="stylesheet" href="ordertrack.css">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+        <script scr="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v5.7.2/css/all.css"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js "></script>
+    </head>
+
+    <body>
+        <div class="card">
+            <div class="title">Purchase Receipt</div>
+            <div class="info">
+                <div class="row">
+                    <div class="col-7">
+                        <span id="heading">Date</span><br>
+                        <span id="details">10 October 2018</span>
+                    </div>
+                    <div class="col-5 pull-right">
+                        <span id="heading">Order No.</span><br>
+                        <span id="details">012j1gvs356c</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pricing">
+                <div class="order-list">
+                    <h2>Order List</h2>
+                    <table>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                        </tr>
+                        <tr>
+                            <td>012j1gvs356c</td>
+                            <td>10 October 2018</td>
+                            <td>&pound;200.00</td>
+                        </tr>
+                        <!-- Thêm các hàng (rows) của danh sách order vào đây -->
+                    </table>
+                </div>
+            </div>
+            <button id="payNowBtn">Pay Now</button>
+            <div class="tracking">
+                <div class="title">Tracking Order</div>
+            </div>
+            <div class="progress-track">
+                <ul id="progressbar">
+                    <li class="step0 active " id="step1">Verified Supplier</li>
+                    <li class="step0 active text-center" id="step2">Preparing</li>
+                    <li class="step0 active text-right" id="step3">Processing</li>
+                    <li class="step0 text-right" id="step4">Delivered</li>
+                </ul>
+            </div>
+
+            <!-- Bảng hiển thị thông tin các danh sách order -->
+
+
+            <!-- Button Pay Now và Button Hủy Đơn -->
+            <div class="buttons">
+
+                <button id="cancelOrderBtn">Hủy Đơn</button>
+            </div>
+
+            <div class="footer">
+                <div class="row">
+                    <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/YBWc55P.png"></div>
+                    <div class="col-10">Want any help? Please &nbsp;<a>contact us</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thêm script JavaScript để cập nhật dữ liệu -->
+        <script src="path/to/your/javascript.js"></script>
+    </body>
+
+</html>
